@@ -1,7 +1,7 @@
 import {BasicBox} from "../../comps/WindowElem";
 import React, {useEffect} from "react";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import EpiCoin from "../../assets/svg/epicoin.svg";
+import EpiCoinFilled from "../../assets/svg/epicoinfilled.svg";
 
 import {
     faBrain,
@@ -48,7 +48,7 @@ function RoadBlock(props: {
                     props.current_credits < props.required_credits! ?
                         <FontAwesomeIcon icon={faWarning} className={"text-red-600"}/> :
                         <div className={"w-6 h-6"}>
-                            <EpiCoin/>
+                            <EpiCoinFilled/>
                         </div>
                 }
                 {props.required_credits !== null ?
@@ -236,7 +236,7 @@ export default function ModulePage(): React.ReactElement {
                 <TopCard title={"Your credits"} icon={faUserGraduate} isOk={true}>
                     <div className={"flex flex-row items-center gap-2 text-2xl"}>
                         <div className={"w-6 h-6"}>
-                            <EpiCoin/>
+                            <EpiCoinFilled/>
                         </div>
                         <p className={"font-bold text"}>{api_data.credits}</p>
                     </div>
@@ -247,7 +247,7 @@ export default function ModulePage(): React.ReactElement {
                     <p className={"italic text-xs text"}>To validate your year</p>
                     <div className={"flex flex-row items-center gap-2 text-2xl"}>
                         <div className={"w-6 h-6"}>
-                            <EpiCoin/>
+                            <EpiCoinFilled/>
                         </div>
                         <div className={"flex text flex-row items-baseline"}>
                             <p className={"font-bold"}>{api_data.credits + getStrategyCredits()}</p>

@@ -3,10 +3,9 @@ import React from "react";
 export default function EpiCoin({ fillColor = "#EAB308" }) { // Default to yellowish color
     return (
         <svg
-            onClick={() => window.open("https://github.com/EliotAmn/tekbetter-server", "_blank")}
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 1024 1024"
-            className="cursor-pointer"
+            preserveAspectRatio="xMidYMid meet"
         >
             <g
                 transform="translate(0.000000,1024.000000) scale(0.100000,-0.100000)"
