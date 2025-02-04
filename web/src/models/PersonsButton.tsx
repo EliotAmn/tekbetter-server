@@ -36,7 +36,7 @@ function PersonsModal(props: { students_ids: string[], mouseX: number, mouseY: n
                                     alt={stud.name}
                                     className={"rounded-full mr-2 object-cover w-10 h-10"}
                                 />
-                                <p className={"text-sm text-nowrap"}>{stud.name}</p>
+                                <p className={"text-sm break-words whitespace-normal"}>{stud.name}</p>
                             </div>
                         })}
                     </div>}
