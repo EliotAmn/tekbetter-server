@@ -40,7 +40,13 @@ def init_services():
         exit(1)
 
     # Connect to MongoDB
-    mongo_url = f"mongodb://{os.getenv('MONGO_HOST')}:{os.getenv('MONGO_PORT')}?directConnection=true"
+    if os.getenv("MONGO_USER") and os.getenv("MONGO_PASSWORD"):
+        # Use authentication
+        mongo_url = f"mongodb://{os.getenv('MONGO_USER')}:{os.getenv('MONGO_PASSWORD')}@{os.getenv('MONGO_HOST')}:{os.getenv('MONGO_PORT')}/{os.getenv('MONGO_DB')}"
+    else:
+        # Don't use authentication
+        mongo_url = f"mongodb://{os.getenv('MONGO_HOST')}:{os.getenv('MONGO_PORT')}?directConnection=true"
+    
     log_info("Connecting to MongoDB...")
     Globals.database = pymongo.MongoClient(mongo_url)[os.getenv('MONGO_DB')]
 

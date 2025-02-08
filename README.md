@@ -16,22 +16,24 @@ their daily life.
 
 ### Backend (`/.env`)
 
-| Variable             | Description                                                                | Default value |
-|----------------------|----------------------------------------------------------------------------|---------------|
-| PORT                 | Port where the server will listen                                          | 8080          |
-| MONGO_HOST           | The mongodb database hostname.                                             | mongo         |
-| MONGO_PORT           | The mongodb database port.                                                 | 27017         |
-| MONGO_DB             | The mongodb database name.                                                 | tekbetter     |
-| REDIS_HOST           | The redis database hostname.                                               | redis         |
-| REDIS_PORT           | The redis database port.                                                   | 6379          |
-| REDIS_PASSWORD       | The redis database password.                                               |               |
-| REDIS_DB             | The redis database number.                                                 | 0             |
-| JWT_SECRET           | The secret key used to sign the JWT token.                                 |               |
-| AES_KEY              | The key used to encrypt sensible data in database. 64 bytes long required. |               |
-| SCRAPERS_CONFIG_FILE | The path to the scrapers configuration file. Optional                      | scrapers.json |
-| APP_URL              | The app url used to send register links by email.                          |               |
-| ENABLE_MAILER        | Enable the mailer service.                                                 | false         |
-| BYPASS_CACHE_RELOAD  | This bypass the cache reload when the server is started.                   | false         |
+| Variable                     | Description                                                                | Default value |
+|------------------------------|----------------------------------------------------------------------------|---------------|
+| PORT                         | Port where the server will listen                                          | 8080          |
+| MONGO_HOST                   | The mongodb database hostname.                                             | mongo         |
+| MONGO_PORT                   | The mongodb database port.                                                 | 27017         |
+| MONGO_DB                     | The mongodb database name.                                                 | tekbetter     |
+| MONGO_USER                   | The mongodb root username.                                                 |               |
+| MONGO_PASSWORD               | The mongodb root password.                                                 |               |
+| REDIS_HOST                   | The redis database hostname.                                               | redis         |
+| REDIS_PORT                   | The redis database port.                                                   | 6379          |
+| REDIS_PASSWORD               | The redis database password.                                               |               |
+| REDIS_DB                     | The redis database number.                                                 | 0             |
+| JWT_SECRET                   | The secret key used to sign the JWT token.                                 |               |
+| AES_KEY                      | The key used to encrypt sensible data in database. 64 bytes long required. |               |
+| SCRAPERS_CONFIG_FILE         | The path to the scrapers configuration file. Optional                      | scrapers.json |
+| APP_URL                      | The app url used to send register links by email.                          |               |
+| ENABLE_MAILER                | Enable the mailer service.                                                 | false         |
+| BYPASS_CACHE_RELOAD          | This bypass the cache reload when the server is started.                   | false         |
 
 ### Frontend (`/web/.env`)
 
@@ -67,6 +69,8 @@ APP_URL=http://localhost:8080
 JWT_SECRET=my_jwt_secret
 AES_KEY=a9421fce83c42eeab1a958c24b516943ccda3e2c4cf6ee3ada4cc78315d228d2
 MONGO_HOST=localhost
+MONGO_USER=your_mongo_username
+MONGO_PASSWORD=your_mongo_password
 REDIS_HOST=localhost
 REDIS_PASSWORD=123456
 DATA_PATH=./data

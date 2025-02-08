@@ -57,6 +57,11 @@ def load_env():
             else:
                 raise Exception(f"Missing environment variable {key}")
 
+    if os.getenv("MONGO_USER") and os.getenv("MONGO_PASSWORD"):
+        log_debug("MongoDB authentication enabled")
+    else:
+        log_warning("MongoDB authentication not enabled, proceeding without authentication")
+
     if "SCRAPERS_CONFIG_FILE" in os.environ:
         displ_deprecated(
             "SCRAPERS_CONFIG_FILE is deprecated. Please use DATA_PATH instead as a folder, and place a scrapers.json file into.")

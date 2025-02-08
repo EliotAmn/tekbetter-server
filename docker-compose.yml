@@ -6,6 +6,9 @@ services:
       - '27017:27017'
     volumes:
       - dbdata6:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
 
   redis:
     image: redis:latest
