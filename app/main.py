@@ -1,4 +1,5 @@
 import os
+import threading
 import pymongo
 from flask import Flask, send_from_directory, render_template
 from flask_cors import CORS
@@ -124,9 +125,6 @@ def create_app():
             return send_from_directory(flask_app.static_folder, 'index.html')
 
     CORS(flask_app)
-    if os.getenv("BYPASS_CACHE_RELOAD", "false") == "false":
-        MouliService.refresh_all_cache()
-
     ModuleService.purge_nonid_modules()
 
     # Prometheus metrics
@@ -150,7 +148,9 @@ app = create_app()
 
 if __name__ == "__main__":
     try:
-        app.run("0.0.0.0", os.getenv("PORT", 8080), debug=True)
+        if os.getenv("BYPASS_CACHE_RELOAD", "false") == "false":
+            threading.Thread(target=MouliService.refresh_all_cache).start()
+        app.run("0.0.0.0", os.getenv("PORT", 8080), debug=False, use_reloader=False)
     except KeyboardInterrupt:
         # Shutdown services
         log_info("Closing redis connection...")
