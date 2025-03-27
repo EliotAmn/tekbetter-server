@@ -6,6 +6,7 @@ from flask import request
 from app.api.middlewares.scraper_auth_middleware import \
     scraper_auth_middleware, public_scraper_auth_middleware
 from app.models.Module import Module
+from app.models.NetsoulData import NetSoulData
 from app.models.PlanningEvent import PlanningEvent
 from app.models.Project import Project
 from app.models.PublicScraper import PublicScraper
@@ -66,6 +67,10 @@ def load_scrapers_routes(app):
         student = request.student
         moulis_ids = MouliService.get_student_mouliids(student.id)
 
+        netsoul = StudentService.get_netsoul(student.id)
+        netsoul_reload_interval = 3 # every 3 hours
+        need_netsoul = (not netsoul or (datetime.now() - netsoul.last_update).total_seconds() > netsoul_reload_interval * 3600)
+
         asked_slugs = []
         projects = ProjectService.get_student_projects(student.id)
         for project in projects:
@@ -93,6 +98,7 @@ def load_scrapers_routes(app):
             "known_tests": moulis_ids,
             "known_modules": [m.module_id for m in ModuleService.get_recent_fetched_modules(student.id)],
             "asked_slugs": asked_slugs,
+            "need_netsoul": need_netsoul,
             "need_picture_login": None if StudentPictureService.is_picture_exists(student.login) else student.login,
             "fetch_start": start.strftime("%Y-%m-%d"),
             "fetch_end": end.strftime("%Y-%m-%d")
@@ -164,6 +170,10 @@ def load_scrapers_routes(app):
                 mouli = build_mouli_from_myepitech(mouli_id, mouli_data,
                                                    student.id)
                 MouliService.upload_mouli(mouli)
+
+        if "netsoul" in data and data["netsoul"] is not None:
+            StudentService.upload_netsoul(student.id)
+
 
         if data["slugs"] is not None:
             for project_id, slug in data["slugs"].items():

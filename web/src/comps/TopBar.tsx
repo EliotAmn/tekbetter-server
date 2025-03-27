@@ -3,7 +3,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {
     faBars,
     faCalendarCheck, faCheckCircle, faGears,
-    faGraduationCap, faLinesLeaning, faMoon, faPowerOff, faShareNodes, faSun,
+    faGraduationCap, faMoon, faPowerOff, faShareNodes, faSun, faUser,
     faWarning, faXmark
 } from "@fortawesome/free-solid-svg-icons";
 import {dateToElapsed} from "../tools/DateString";
@@ -174,6 +174,7 @@ export default function TopBar(props: {
         {text: "Modules", link: "/modules", icon: faShareNodes},
         {text: "Calendar", link: "/calendar", icon: faCalendarCheck},
         {text: "Synchronisation", link: "/sync", icon: faCheckCircle},
+        {text: "Profile", link: "/profile", icon: faUser},
         {text: "Settings", link: "/settings", icon: faGears}
 
     ]

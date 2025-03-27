@@ -14,6 +14,7 @@ import Footer from "./comps/Footer";
 import ModulePage from "./pages/module/ModulePage";
 import SettingsPage from "./pages/SettingsPage";
 import {getSyncStatus} from "./api/global.api";
+import ProfilePage from "./pages/profile/ProfilePage";
 
 function App() {
 
@@ -55,6 +56,8 @@ function App() {
                         <Route path="/sync" element={<SyncPage/>}/>
                         <Route path="/moulinettes" element={<MouliPage/>}/>
                         <Route path="/modules" element={<ModulePage/>}/>
+                        <Route path="/profile" element={<ProfilePage/>}/>
+
                         <Route path="/moulinettes/:project_slug"
                                element={<MouliPage/>}/>
                         <Route path="/settings" element={<SettingsPage/>}/>

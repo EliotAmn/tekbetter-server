@@ -3,7 +3,11 @@ import random
 import string
 from datetime import datetime, timedelta
 from uuid import uuid4
+
+from sqlalchemy.testing.provision import upsert
+
 from app.globals import Globals
+from app.models.NetsoulData import NetSoulData, NetSoulDayLog
 from app.models.Student import Student
 from app.services.mail_service import MailService
 from app.services.redis_service import RedisService
@@ -29,6 +33,27 @@ class StudentService:
             {"_id": {"$in": [str(sid) for sid in student_ids]}, "is_consent_share": True})
 
         return [student["_id"] for student in students if student]
+
+    @staticmethod
+    def get_netsoul(student_id: str):
+        result = Globals.database["netsoul"].find_one({"student_id": student_id})
+        if not result:
+            return None
+        return NetSoulData(result)
+
+    @staticmethod
+    def upload_netsoul(student_id: str, from_scraper_series: [dict]):
+        out = NetSoulData()
+        out.student_id = student_id
+        out.last_update = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        for d in from_scraper_series:
+           out.data.append(NetSoulDayLog(d["date"], d["student_hours"], d["average_hours"]))
+
+        if not StudentService.get_netsoul(student_id):
+            Globals.database["netsoul"].insert_one(out.to_dict())
+        else:
+            Globals.database["netsoul"].update_one({"student_id": student_id}, {"$set": out.to_dict()})
 
     @staticmethod
     def get_students_by_public_scraper(scraper_id: str) -> [Student]:
