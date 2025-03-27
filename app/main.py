@@ -96,6 +96,8 @@ def create_app():
     log_debug("Debug mode enabled")
 
     init_services()
+    if os.getenv("BYPASS_CACHE_RELOAD", "false") == "false":
+        threading.Thread(target=MouliService.refresh_all_cache).start()
 
     flask_app = Flask(__name__, static_folder=os.getenv("DASHBOARD_BUILD_PATH", "../web/build"))
     if os.path.exists(os.path.join(os.getenv("DATA_PATH"), "monitoring.cfg")):
@@ -148,8 +150,6 @@ app = create_app()
 
 if __name__ == "__main__":
     try:
-        if os.getenv("BYPASS_CACHE_RELOAD", "false") == "false":
-            threading.Thread(target=MouliService.refresh_all_cache).start()
         app.run("0.0.0.0", os.getenv("PORT", 8080), debug=False, use_reloader=False)
     except KeyboardInterrupt:
         # Shutdown services
