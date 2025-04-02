@@ -1,7 +1,7 @@
 from datetime import timezone, timedelta, datetime
 
 from flask import request, Response
-from ics import Calendar, Event
+from ics import Calendar, Event, DisplayAlarm
 from app.api.middlewares.student_auth_middleware import student_auth_middleware
 from app.services.planning_service import PlanningService
 from app.services.project_service import ProjectService
@@ -51,6 +51,7 @@ def load_calendar_routes(app):
             e = Event()
             e.name = activity.title
             e.location = activity.location
+            e.alarms = [DisplayAlarm(trigger=timedelta(hours=-1)), DisplayAlarm(trigger=timedelta(minutes=5))]
 
             bg_date = datetime.strptime(activity.date_start, "%Y-%m-%d %H:%M:%S")
             end_date = datetime.strptime(activity.date_end, "%Y-%m-%d %H:%M:%S")
