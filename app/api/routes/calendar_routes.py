@@ -46,6 +46,9 @@ def load_calendar_routes(app):
 
         # Define the French timezone (UTC+1)
         french_timezone = timezone(timedelta(hours=1))
+        # Check if i'ts summer time
+        if datetime.now().astimezone(french_timezone).dst() != timedelta(0):
+            french_timezone = timezone(timedelta(hours=2))
 
         for activity in activities:
             e = Event()
