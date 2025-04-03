@@ -13,7 +13,7 @@ from app.services.mail_service import MailService
 from app.services.redis_service import RedisService
 from app.tools.jwt_engine import generate_jwt
 from app.tools.password_tools import hash_password
-from app.tools.teklogger import log_debug, log_warning
+from app.tools.teklogger import log_debug, log_warning, log_error
 
 
 class StudentService:
@@ -47,8 +47,15 @@ class StudentService:
         out.student_id = student_id
         out.last_update = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
+        # Check if from_scraper_series is a list
+        if not isinstance(from_scraper_series, list):
+            log_error("Invalid netsoul data for student " + student_id + " (not a list)")
+            return
         for d in from_scraper_series:
-           out.data.append(NetSoulDayLog(d["date"], d["student_hours"], d["average_hours"]))
+            if "date" not in d or "student_hours" not in d or "average_hours" not in d:
+                log_error("Invalid netsoul data for student " + student_id + " (missing keys)")
+                continue
+            out.data.append(NetSoulDayLog(d["date"], d["student_hours"], d["average_hours"]))
 
         if not StudentService.get_netsoul(student_id):
             Globals.database["netsoul"].insert_one(out.to_dict())

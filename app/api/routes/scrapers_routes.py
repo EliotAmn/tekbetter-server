@@ -99,6 +99,7 @@ def load_scrapers_routes(app):
             "known_modules": [m.module_id for m in ModuleService.get_recent_fetched_modules(student.id)],
             "asked_slugs": asked_slugs,
             "need_netsoul": need_netsoul,
+            "student_login": student.login,
             "need_picture_login": None if StudentPictureService.is_picture_exists(student.login) else student.login,
             "fetch_start": start.strftime("%Y-%m-%d"),
             "fetch_end": end.strftime("%Y-%m-%d")
@@ -140,7 +141,7 @@ def load_scrapers_routes(app):
         student = request.student
         data = request.json
 
-        required_keys = ["mouli", "modules", "profile", "planning", "projects", "slugs", "picture"]
+        required_keys = ["mouli", "modules", "profile", "planning", "projects", "slugs", "picture", "netsoul"]
         for key in required_keys:
             if key not in data:
                 log_warning(f"Failed to retrieve data from scraper for user {student.login} : Missing key {key}")
@@ -172,7 +173,7 @@ def load_scrapers_routes(app):
                 MouliService.upload_mouli(mouli)
 
         if "netsoul" in data and data["netsoul"] is not None:
-            StudentService.upload_netsoul(student.id)
+            StudentService.upload_netsoul(student.id, data["netsoul"])
 
 
         if data["slugs"] is not None:
