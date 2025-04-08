@@ -46,16 +46,17 @@ class StudentService:
         out = NetSoulData()
         out.student_id = student_id
         out.last_update = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        out.data = []
 
         # Check if from_scraper_series is a list
         if not isinstance(from_scraper_series, list):
             log_error("Invalid netsoul data for student " + student_id + " (not a list)")
             return
         for d in from_scraper_series:
-            if "date" not in d or "student_hours" not in d or "average_hours" not in d:
+            if "timestamp" not in d or "student_time" not in d or "average_time" not in d:
                 log_error("Invalid netsoul data for student " + student_id + " (missing keys)")
                 continue
-            out.data.append(NetSoulDayLog(d["date"], d["student_hours"], d["average_hours"]))
+            out.data.append(NetSoulDayLog(d["timestamp"], d["student_time"] / 3600, d["average_time"] / 3600))
 
         if not StudentService.get_netsoul(student_id):
             Globals.database["netsoul"].insert_one(out.to_dict())

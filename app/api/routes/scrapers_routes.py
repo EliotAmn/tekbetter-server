@@ -68,9 +68,12 @@ def load_scrapers_routes(app):
         moulis_ids = MouliService.get_student_mouliids(student.id)
 
         netsoul = StudentService.get_netsoul(student.id)
-        netsoul_reload_interval = 3 # every 3 hours
-        need_netsoul = (not netsoul or (datetime.now() - netsoul.last_update).total_seconds() > netsoul_reload_interval * 3600)
-
+        if netsoul:
+            netsoul_reload_interval = 3 # every 3 hours
+            last_update = datetime.strptime(netsoul.last_update, "%Y-%m-%d %H:%M:%S")
+            need_netsoul = (not netsoul or (datetime.now() - last_update).total_seconds() > netsoul_reload_interval * 3600)
+        else:
+            need_netsoul = True
         asked_slugs = []
         projects = ProjectService.get_student_projects(student.id)
         for project in projects:
@@ -115,7 +118,7 @@ def load_scrapers_routes(app):
         student_login = request.student_login
 
         values_whitelist = ["loading", "success", "error"]
-        keys_whitelist = ["mouli", "planning", "projects", "slugs", "modules", "avatar", "profile", "auth", "scraping"]
+        keys_whitelist = ["mouli", "planning", "projects", "slugs", "modules", "avatar", "profile", "auth", "scraping", "netsoul"]
 
         data = request.json
 

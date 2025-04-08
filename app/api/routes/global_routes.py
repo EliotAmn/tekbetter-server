@@ -26,7 +26,7 @@ def load_global_routes(app):
                 "last_update": date
             }
 
-        keys = ["mouli", "planning", "projects", "slugs", "modules", "avatar", "profile", "auth", "scraping"]
+        keys = ["mouli", "planning", "projects", "slugs", "modules", "avatar", "profile", "auth", "scraping","netsoul"]
         result = {}
 
         for k in keys:
@@ -71,3 +71,15 @@ def load_global_routes(app):
         response.headers.set(
             'Content-Disposition', 'attachment', filename='%s.jpg' % student_login)
         return response
+
+    @app.route("/api/global/netsoul", methods=["GET"])
+    @student_auth_middleware()
+    def global_netsoul():
+        """
+        Get the netsoul data for a student
+        """
+        student = request.student
+        netsoul = StudentService.get_netsoul(student.id)
+        if not netsoul:
+            return {"data": [], "last_update": None}
+        return netsoul.to_api()

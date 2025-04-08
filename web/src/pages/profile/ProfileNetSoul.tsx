@@ -1,16 +1,17 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import ReactApexChart from "react-apexcharts";
 import Button from "../../comps/Button";
 import {faCalendar} from "@fortawesome/free-solid-svg-icons";
+import {getNetsoul} from "../../api/global.api";
 
 class NetSoulDayStat {
     date: Date;
-    minutes: number;
+    hours: number;
     average: number;
 
-    constructor(date: Date, minutes: number, average: number) {
+    constructor(date: Date, hours: number, average: number) {
         this.date = date;
-        this.minutes = minutes;
+        this.hours = hours;
         this.average = average;
     }
 
@@ -18,30 +19,36 @@ class NetSoulDayStat {
 
 export default function ProfileNetSoul() {
     const [stats, setStats] = useState<NetSoulDayStat[]>([
-        new NetSoulDayStat(new Date("2025-03-11"), 10, 15),
-        new NetSoulDayStat(new Date("2025-03-12"), 10, 15),
-        new NetSoulDayStat(new Date("2025-03-13"), 10, 15),
-        new NetSoulDayStat(new Date("2025-03-14"), 10, 15),
-        new NetSoulDayStat(new Date("2025-03-15"), 10, 15),
-        new NetSoulDayStat(new Date("2025-03-16"), 20, 25),
-        new NetSoulDayStat(new Date("2025-03-17"), 47, 199),
-        new NetSoulDayStat(new Date("2025-03-18"), 200, 152),
-        new NetSoulDayStat(new Date("2025-03-19"), 100, 100),
+        // new NetSoulDayStat(new Date("2025-03-11"), 10, 15),
+        // new NetSoulDayStat(new Date("2025-03-12"), 10, 15),
+        // new NetSoulDayStat(new Date("2025-03-13"), 10, 15),
+        // new NetSoulDayStat(new Date("2025-03-14"), 10, 15),
+        // new NetSoulDayStat(new Date("2025-03-15"), 10, 15),
+        // new NetSoulDayStat(new Date("2025-03-16"), 20, 25),
+        // new NetSoulDayStat(new Date("2025-03-17"), 47, 199),
+        // new NetSoulDayStat(new Date("2025-03-18"), 200, 152),
+        // new NetSoulDayStat(new Date("2025-03-19"), 100, 100),
     ]);
+
 
     const [filterStart, setFilterStart] = useState<Date>(new Date("2020-03-15"));
     const [filterEnd, setFilterEnd] = useState<Date>(new Date());
 
     const filter_metrics = () => {
-        return stats.filter((stat) => stat.date >= filterStart && stat.date <= filterEnd);
+        return stats.filter((stat) => stat.date >= filterStart);
     }
 
-    const to_hours = (minutes: number) => {
-        // round to 2 decimals
-        return parseFloat((minutes / 60).toFixed(2));
-    }
-
-    console.log(filter_metrics());
+    useEffect(() => {
+        getNetsoul().then((data) => {
+            let stats: NetSoulDayStat[] = [];
+            data.data.forEach((stat: { timestamp: number, student_hours: number, average_hours: number }) => {
+                const date = new Date(stat.timestamp * 1000);
+                date.setHours(0, 0, 0, 0);
+                stats.push(new NetSoulDayStat(date, stat.student_hours, stat.average_hours));
+            });
+            setStats(stats);
+        })
+    }, []);
 
     return <div>
 
@@ -85,9 +92,11 @@ export default function ProfileNetSoul() {
                 options={{
                     chart: {
                         id: "basic-bar",
+                        foreColor: '#ffffff',
                         toolbar: {
                             show: false,
                         },
+
                         zoom: {
                             enabled: false,
                         },
@@ -95,11 +104,25 @@ export default function ProfileNetSoul() {
                             enabled: false,
                         }
                     },
-
-
+                    tooltip: {
+                        theme: 'dark'
+                    },
+                    dataLabels: {
+                        enabled: false,
+                    },
                     xaxis: {
                         type: "datetime",
-
+                        labels: {
+                            datetimeUTC: true,
+                            formatter(value: string, timestamp?: number, opts?: any): string | string[] {
+                                const date = new Date(parseInt(value));
+                                return date.toLocaleDateString("fr-FR", {
+                                    year: "numeric",
+                                    month: "2-digit",
+                                    day: "2-digit",
+                                });
+                            }
+                        },
                     },
                     stroke: {
                         show: true,
@@ -108,18 +131,18 @@ export default function ProfileNetSoul() {
                 }}
                 series={[
                     {
-                        name: "Campus time spent",
-                        data: filter_metrics().map((stat) => [stat.date.getTime(), to_hours(stat.minutes)]),
-                        color: "#64db1e",
+                        name: "Time active",
+                        // round to 2 decimals
+                        data: filter_metrics().map((stat) => [stat.date.getTime(), parseFloat(stat.hours.toFixed(2))]),
+                        color: "#1e89db",
                     },
                     {
-                        name: "Class average",
-                        data: filter_metrics().map((stat) => [stat.date.getTime(), to_hours(stat.average)]),
-                        color: "#0077ff",
+                        name: "Promo average",
+                        data: filter_metrics().map((stat) => [stat.date.getTime(), parseFloat(stat.average.toFixed(2))]),
+                        color: "rgba(255,95,0,0.8)",
                     },
                 ]}
                 type="area"
-                width="500"
                 height="300"
             />
         </div>

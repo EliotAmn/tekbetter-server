@@ -16,6 +16,7 @@ export interface SyncStatusType {
     profile?: SyncStatusTypeResult,
     auth?: SyncStatusTypeResult,
     scraping?: SyncStatusTypeResult,
+    netsoul?: SyncStatusTypeResult,
 }
 
 export async function getSyncStatus(): Promise<{status: SyncStatusType, scraper_id: string | null} > {
@@ -57,4 +58,9 @@ export async function getStudentData(id: string): Promise<StudentData> {
     vars.studentsCache.push(student);
     return student;
 
+}
+
+export async function getNetsoul() {
+    const res = await api.get(`/global/netsoul`);
+    return res.data;
 }
