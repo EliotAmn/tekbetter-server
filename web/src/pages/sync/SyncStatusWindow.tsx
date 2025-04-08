@@ -72,6 +72,7 @@ export default function SyncStatusWindow(): React.ReactElement {
             <div className={"bg-black opacity-5 h-0.5 mb-5"}/>
             <SyncRow title={"Marvin's tests"} status={syncStatus.mouli} key={"moulinettes"}/>
             <SyncRow title={"Intra Calendar"} status={syncStatus.planning} key={"calendar"}/>
+            <SyncRow title={"Presence activity"} status={syncStatus.netsoul} key={"netsoul"}/>
             <SyncRow title={"Projects"} status={syncStatus.projects} key={"projects"}/>
             <SyncRow title={"Links between tests and projects"} status={syncStatus.slugs} key={"slugs"} />
             <SyncRow title={"Modules & RoadBlocks"} status={syncStatus.modules} key={"modules"}/>
