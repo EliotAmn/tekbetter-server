@@ -32,7 +32,6 @@ export default function ProfileNetSoul() {
 
 
     const [filterStart, setFilterStart] = useState<Date>(new Date("2020-03-15"));
-    const [filterEnd, setFilterEnd] = useState<Date>(new Date());
 
     const filter_metrics = () => {
         return stats.filter((stat) => stat.date >= filterStart);
@@ -48,6 +47,23 @@ export default function ProfileNetSoul() {
             });
             setStats(stats);
         })
+
+
+        if (localStorage.getItem("nsfilter") === "1w") {
+            setFilterStart(new Date(Date.now() - 1000 * 60 * 60 * 24 * 7));
+        }
+        else if (localStorage.getItem("nsfilter") === "1m") {
+            setFilterStart(new Date(Date.now() - 1000 * 60 * 60 * 24 * 30));
+        }
+        else if (localStorage.getItem("nsfilter") === "6m") {
+            setFilterStart(new Date(Date.now() - 1000 * 60 * 60 * 24 * 180));
+        }
+        else if (localStorage.getItem("nsfilter") === "1y") {
+            setFilterStart(new Date(Date.now() - 1000 * 60 * 60 * 24 * 365));
+        }
+        else if (localStorage.getItem("nsfilter") === "all") {
+            setFilterStart(new Date("2019-03-15"));
+        }
     }, []);
 
     return <div>
@@ -56,31 +72,31 @@ export default function ProfileNetSoul() {
             <Button icon={faCalendar} text={"1w"} onClick={() => {
                 // set now - 7 days
                 setFilterStart(new Date(Date.now() - 1000 * 60 * 60 * 24 * 7));
-                setFilterEnd(new Date());
+                localStorage.setItem("nsfilter", "1w");
             }}/>
 
             <Button icon={faCalendar} text={"1m"} onClick={() => {
                 // set now - 30 days
                 setFilterStart(new Date(Date.now() - 1000 * 60 * 60 * 24 * 30));
-                setFilterEnd(new Date());
+                localStorage.setItem("nsfilter", "1m");
             }}/>
 
             <Button icon={faCalendar} text={"6m"} onClick={() => {
                 // set now - 180 days
                 setFilterStart(new Date(Date.now() - 1000 * 60 * 60 * 24 * 180));
-                setFilterEnd(new Date());
+                localStorage.setItem("nsfilter", "6m");
             }}/>
 
             <Button icon={faCalendar} text={"1y"} onClick={() => {
                 // set now - 365 days
                 setFilterStart(new Date(Date.now() - 1000 * 60 * 60 * 24 * 365));
-                setFilterEnd(new Date());
+                localStorage.setItem("nsfilter", "1y");
             }}/>
 
             <Button icon={faCalendar} text={"All"} onClick={() => {
                 // set now - 365 days
                 setFilterStart(new Date("2019-03-15"));
-                setFilterEnd(new Date());
+                localStorage.setItem("nsfilter", "all");
             }}/>
 
 
